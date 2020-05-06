@@ -1,28 +1,29 @@
 package io.dicedev.pantry.controllers;
 
+import io.dicedev.pantry.domain.dto.ProductDto;
+import io.dicedev.pantry.domain.dto.ProductsDto;
+import io.dicedev.pantry.domain.service.ProductService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
+@RequestMapping("/products")
+@CrossOrigin
+@AllArgsConstructor
 public class PantryController {
 
-    private List<String> products = new ArrayList<>();
+    private ProductService service;
 
-    @GetMapping("/product/{id}")
-    public String getProduct(@PathVariable int id) {
-        return products.get(id+1);
+
+    @GetMapping
+    public ProductsDto getProducts() {
+        return service.getProducts();
     }
 
-    @GetMapping("/products")
-    public String getProducts() {
-        return products.toString();
-    }
-
-    @PostMapping("/product")
-    public void addProduct(@RequestBody String product) {
-        products.add(product);
+    @PostMapping
+    public void addProduct(@RequestBody ProductDto product) {
+        service.addProduct(product);
         System.out.println(product);
     }
 }

@@ -1,0 +1,14 @@
+package io.dicedev.pantry.domain.dto;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+public class ProductDto {
+    private String name;
+}
