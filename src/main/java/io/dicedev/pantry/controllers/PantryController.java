@@ -1,23 +1,29 @@
 package io.dicedev.pantry.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import io.dicedev.pantry.domain.dto.ProductDto;
+import io.dicedev.pantry.domain.dto.ProductsDto;
+import io.dicedev.pantry.domain.service.ProductService;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
+@RequestMapping("/products")
+@CrossOrigin
+@AllArgsConstructor
 public class PantryController {
 
-    private String product;
+    private ProductService service;
 
-    @GetMapping("/product")
-    public String getProduct() {
-        return product;
+
+    @GetMapping
+    public ProductsDto getProducts() {
+        return service.getProducts();
     }
 
-    @PostMapping("/product")
-    public void addProduct(@RequestBody String product) {
-        this.product = product;
+    @PostMapping
+    public void addProduct(@RequestBody ProductDto product) {
+        service.addProduct(product);
         System.out.println(product);
     }
 }
