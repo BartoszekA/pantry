@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -22,13 +24,25 @@ public class ProductServiceImpl implements ProductService {
     public void addProduct(ProductDto productDto) {
         if (productsDto == null) {
             productsDto = new ProductsDto();
-            productsDto.setProductsDto(new HashMap<>());
+            productsDto.setProductsDto(new ArrayList<>());
         }
-        Integer product = productsDto.getProductsDto().get(productDto);
-        if (product == null) {
-            productsDto.getProductsDto().put(productDto, 1);
+        String productName = productDto.getName();
+        Optional<ProductDto> product = productsDto.getProductsDto()
+                .stream()
+                .filter(p -> p.getName().equals(productName))
+                .findFirst();
+        if (product.isPresent()) {
+            ProductDto prod = product.get();
+            prod.setAmount(increaseAmount(prod));
         } else {
-            productsDto.getProductsDto().put(productDto, ++product);
+            productDto.setAmount(1);
+            productDto.setId(UUID.randomUUID());
+            productsDto.getProductsDto().add(productDto);
         }
+    }
+
+    private Integer increaseAmount(ProductDto productDto) {
+        Integer amount = productDto.getAmount();
+        return ++amount;
     }
 }
