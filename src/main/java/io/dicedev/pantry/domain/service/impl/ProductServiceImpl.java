@@ -6,6 +6,7 @@ import io.dicedev.pantry.domain.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -21,8 +22,13 @@ public class ProductServiceImpl implements ProductService {
     public void addProduct(ProductDto productDto) {
         if (productsDto == null) {
             productsDto = new ProductsDto();
-            productsDto.setProductsDto(new ArrayList<>());
+            productsDto.setProductsDto(new HashMap<>());
         }
-        productsDto.getProductsDto().add(productDto);
+        Integer product = productsDto.getProductsDto().get(productDto);
+        if (product == null) {
+            productsDto.getProductsDto().put(productDto, 1);
+        } else {
+            productsDto.getProductsDto().put(productDto, ++product);
+        }
     }
 }
