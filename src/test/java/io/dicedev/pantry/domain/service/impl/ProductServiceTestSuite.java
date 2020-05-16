@@ -38,11 +38,11 @@ public class ProductServiceTestSuite {
     @Test
     public void shouldGetFiveProductsAfterAddingFiveProducts() {
         //Given
-        ProductDto productDto1 = new ProductDto();
-        ProductDto productDto2 = new ProductDto();
-        ProductDto productDto3 = new ProductDto();
-        ProductDto productDto4 = new ProductDto();
-        ProductDto productDto5 = new ProductDto();
+        ProductDto productDto1 = new ProductDto("product1");
+        ProductDto productDto2 = new ProductDto("product2");
+        ProductDto productDto3 = new ProductDto("product3");
+        ProductDto productDto4 = new ProductDto("product4");
+        ProductDto productDto5 = new ProductDto("product5");
 
         //When
         productService.addProduct(productDto1);

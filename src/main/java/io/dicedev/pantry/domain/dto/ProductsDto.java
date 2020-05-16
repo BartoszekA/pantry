@@ -1,16 +1,16 @@
 package io.dicedev.pantry.domain.dto;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 public class ProductsDto {
-    private Map<ProductDto, Integer> productsDto;
+    private List<ProductDto> productsDto;
 
-    public Map<ProductDto, Integer> getProductsDto() {
+    public List<ProductDto> getProductsDto() {
         return productsDto;
     }
 
-    public void setProductsDto(Map<ProductDto, Integer> productsDto) {
+    public void setProductsDto(List<ProductDto> productsDto) {
         this.productsDto = productsDto;
     }
 
