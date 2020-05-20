@@ -98,4 +98,17 @@ public class ProductServiceTestSuite {
         );
     }
 
+    @Test
+    public void shouldRenameOneExistingProduct() {
+        //Given
+        ProductDto productDto = new ProductDto("Product");
+        productService.addProduct(productDto);
+
+        //When
+        productService.renameProduct(productDto.getId(), "New name");
+        String result = productDto.getName();
+
+        //Then
+        assertEquals("New name", result);
+    }
 }
