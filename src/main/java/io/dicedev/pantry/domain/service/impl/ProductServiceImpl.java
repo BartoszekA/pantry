@@ -49,6 +49,15 @@ public class ProductServiceImpl implements ProductService {
         product.setName(newName);
     }
 
+    @Override
+    public void renameProduct2(UUID id, ProductDto productDto) {
+        String newName = productDto.getName();
+        ProductDto product = productsDto.getProductsDto().stream()
+                .filter(prod -> id.equals(prod.getId()))
+                .findFirst().orElseThrow();
+        product.setName(newName);
+    }
+
     private Integer increaseAmount(ProductDto productDto) {
         Integer amount = productDto.getAmount();
         return ++amount;
