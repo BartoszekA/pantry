@@ -9,6 +9,8 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductDto {
     private UUID id;
     private String name;
