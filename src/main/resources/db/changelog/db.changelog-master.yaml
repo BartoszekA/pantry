@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       file: db/changelog/01-create-product-schema.xml
+  - include:
+      file: db/changelog/02-update-product-schema.xml
+
+
