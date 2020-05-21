@@ -36,4 +36,10 @@ public class PantryController {
         service.renameProduct(id, newName);
         log.info(id.toString() + ", " + newName);
     }
+
+    @PutMapping("/{id}")
+    public void renameProduct2(@PathVariable UUID id, @RequestBody ProductDto productDto) {
+        service.renameProduct2(id, productDto);
+        log.info(id.toString() + ", " + productDto.getName());
+    }
 }
