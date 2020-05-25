@@ -33,6 +33,6 @@ public class PantryController {
 
     @PutMapping
     public void renameProduct(@RequestBody ProductDto productDto) {
-        service.renameProduct(productDto.getId(), productDto);
-    }
+        service.renameProduct(productDto);
+}
 }
