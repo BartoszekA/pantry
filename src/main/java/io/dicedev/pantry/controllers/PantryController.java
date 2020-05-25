@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.InvalidKeyException;
 import java.util.UUID;
 
 
@@ -26,7 +27,7 @@ public class PantryController {
     }
 
     @PostMapping
-    public void addProduct(@RequestBody ProductDto product) {
+    public void addProduct(@RequestBody ProductDto product) throws InvalidKeyException {
         service.addProduct(product);
         log.info(product.toString());
     }

@@ -5,16 +5,20 @@ import io.dicedev.pantry.command.repository.ProductRepository;
 import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
 import io.dicedev.pantry.domain.service.ProductService;
+import io.dicedev.pantry.domain.validate.ProductValidator;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidKeyException;
 import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final ProductValidator productValidator;
 
     @Override
     public ProductsDto getProducts() {
@@ -33,7 +37,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(ProductDto productDto) {
+    public void addProduct(ProductDto productDto) throws InvalidKeyException {
+        productValidator.isValid(productDto);
         String productName = productDto.getName();
         ProductEntity product = productRepository.findByName(productName);
         if (Objects.isNull(product)) {
