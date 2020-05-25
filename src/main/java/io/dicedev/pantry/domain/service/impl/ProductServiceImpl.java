@@ -8,10 +8,7 @@ import io.dicedev.pantry.domain.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -37,18 +34,26 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void addProduct(ProductDto productDto) {
-        productRepository.save(ProductEntity.builder()
-                .name(productDto.getName())
-                .amount(1)
-                .build());
+        String productName = productDto.getName();
+        ProductEntity product = productRepository.findByName(productName);
+        if (Objects.isNull(product)) {
+            productRepository.save(ProductEntity.builder()
+                    .name(productDto.getName())
+                    .amount(1)
+                    .build());
+        } else {
+            Integer newProductAmount = product.getAmount() + 1;
+            product.setAmount(newProductAmount);
+            productRepository.save(product);
+        }
     }
 
     @Override
-    public void renameProduct(UUID id, ProductDto productDto) {
-/*        String newName = productDto.getName();
-        ProductDto product = productsDto.getProductsDto().stream()
-                .filter(prod -> id.equals(prod.getId()))
-                .findFirst().orElseThrow();
-        product.setName(newName);*/
+    public void renameProduct(ProductDto productDto) {
+        UUID productId = productDto.getId();
+        Optional<ProductEntity> product = productRepository.findById(productId);
+        ProductEntity productEntity = product.get();
+        productEntity.setName(productDto.getName());
+        productRepository.save(productEntity);
     }
 }
