@@ -57,8 +57,10 @@ public class ProductServiceImpl implements ProductService {
     public void renameProduct(ProductDto productDto) {
         UUID productId = productDto.getId();
         Optional<ProductEntity> product = productRepository.findById(productId);
-        ProductEntity productEntity = product.get();
-        productEntity.setName(productDto.getName());
-        productRepository.save(productEntity);
+        if (product.isPresent()) {
+            ProductEntity productEntity = product.get();
+            productEntity.setName(productDto.getName());
+            productRepository.save(productEntity);
+        }
     }
 }
