@@ -98,10 +98,10 @@ public class ProductServiceTestSuite {
         productService.addProduct(productDto3);
         productService.addProduct(productDto4);
         productService.addProduct(productDto5);
-        ProductsDto result = productService.getProducts();
+        ProductsDto productsDto = productService.getProducts();
 
         //Then
-        assertEquals(5, result.getProductsDto().size());
+        assertEquals(5, productsDto.getProductsDto().size());
     }
 
     @Test
@@ -154,9 +154,22 @@ public class ProductServiceTestSuite {
 
         //When
         productService.renameProduct(productDto);
-        String result = productDto.getName();
 
         //Then
-        assertEquals("New name", result);
+        Mockito.verify(productRepository, Mockito.times(1)).findById(productDto.getId());
+        Mockito.verify(productRepository, Mockito.times(1)).save(any());
+    }
+
+    @Test
+    public void shouldNotRenameNotExistingProduct() throws InvalidKeyException {
+        //Given
+        ProductDto productDto = new ProductDto();
+
+        //When
+        productService.renameProduct(productDto);
+
+        //Then
+        Mockito.verify(productRepository, Mockito.times(1)).findById(productDto.getId());
+        Mockito.verify(productRepository, Mockito.times(0)).save(any());
     }
 }
