@@ -7,6 +7,6 @@ import java.security.InvalidKeyException;
 
 public interface ProductService {
     ProductsDto getProducts();
-    void addProduct(ProductDto productDto) throws InvalidKeyException;
+    void addProduct(ProductDto productDto);
     void renameProduct(ProductDto productDto);
 }

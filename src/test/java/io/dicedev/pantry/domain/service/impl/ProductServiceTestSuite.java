@@ -37,7 +37,7 @@ public class ProductServiceTestSuite {
     }
 
     @Test
-    public void shouldGetOneProductAfterAddingOneProduct() throws InvalidKeyException {
+    public void shouldGetOneProductAfterAddingOneProduct() {
         //Given
         ProductDto productDto = new ProductDto();
 
@@ -84,7 +84,7 @@ public class ProductServiceTestSuite {
     }
 
     @Test
-    public void shouldGetFiveProductsAfterAddingFiveProducts() throws InvalidKeyException {
+    public void shouldGetFiveProductsAfterAddingFiveProducts() {
         //Given
         ProductDto productDto1 = new ProductDto();
         ProductDto productDto2 = new ProductDto();
@@ -101,53 +101,34 @@ public class ProductServiceTestSuite {
         ProductsDto productsDto = productService.getProducts();
 
         //Then
-        assertEquals(5, productsDto.getProductsDto().size());
+        Mockito.verify(productRepository, Mockito.times(5)).save(any());
     }
 
     @Test
-    public void shouldCheckIfTwoProductsArePresentAfterAddingTwoDifferentNames() throws InvalidKeyException {
+    public void shouldIncreaseAmountOfProductIfAddedWithTheSameName() {
         //Given
-        ProductDto productDto = new ProductDto();
-        productDto.setName("Product1");
-        ProductDto productDto2 = new ProductDto();
-        productDto.setName("Product2");
+        Integer entityAmount = 1;
+        String entityName = "Product";
+        UUID entityId = UUID.randomUUID();
+        ProductEntity productEntity1 = ProductEntity.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .build();
+        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount);
+
+        Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity1);
 
         //When
-        productService.addProduct(productDto);
-        productService.addProduct(productDto2);
-        ProductsDto result = productService.getProducts();
+        productService.addProduct(productDto1);
 
         //Then
-        assertAll(
-                () -> assertEquals(2, result.getProductsDto().size()),
-                () -> assertTrue(result.getProductsDto().contains(productDto)),
-                () -> assertTrue(result.getProductsDto().contains(productDto2))
-        );
+        Mockito.verify(productRepository, Mockito.times(1)).save(productEntity1);
+        assertEquals(2, productEntity1.getAmount());
     }
 
     @Test
-    public void shouldCheckIfTwoProductsArePresentAfterAddingTwoSameNames() throws InvalidKeyException {
-        //Given
-        ProductDto productDto = new ProductDto();
-        productDto.setName("Product");
-        ProductDto productDto2 = new ProductDto();
-        productDto.setName("Product");
-
-        //When
-        productService.addProduct(productDto);
-        productService.addProduct(productDto2);
-        ProductsDto result = productService.getProducts();
-
-        //Then
-        assertAll(
-                () -> assertEquals(2, result.getProductsDto().size()),
-                () -> assertTrue(result.getProductsDto().contains(productDto)),
-                () -> assertTrue(result.getProductsDto().contains(productDto2))
-        );
-    }
-
-    @Test
-    public void shouldRenameOneExistingProduct() throws InvalidKeyException {
+    public void shouldRenameOneExistingProduct() {
         //Given
         ProductDto productDto = new ProductDto();
         productService.addProduct(productDto);
@@ -161,7 +142,7 @@ public class ProductServiceTestSuite {
     }
 
     @Test
-    public void shouldNotRenameNotExistingProduct() throws InvalidKeyException {
+    public void shouldNotRenameNotExistingProduct() {
         //Given
         ProductDto productDto = new ProductDto();
 

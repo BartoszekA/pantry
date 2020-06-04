@@ -7,10 +7,8 @@ import io.dicedev.pantry.domain.dto.ProductsDto;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.security.InvalidKeyException;
 import java.util.*;
 
 @Service
@@ -18,7 +16,7 @@ import java.util.*;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductValidator productValidator;
+    private final List<ProductValidator> productValidator;
 
     @Override
     public ProductsDto getProducts() {
@@ -37,20 +35,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(ProductDto productDto) throws InvalidKeyException {
-        productValidator.isValid(productDto);
+    public void addProduct(ProductDto productDto) {
+        productValidator.forEach(it -> it.isValid(productDto));
         String productName = productDto.getName();
         ProductEntity product = productRepository.findByName(productName);
         if (Objects.isNull(product)) {
-            productRepository.save(ProductEntity.builder()
+            product = ProductEntity.builder()
                     .name(productDto.getName())
                     .amount(1)
-                    .build());
+                    .build();
         } else {
             Integer newProductAmount = product.getAmount() + 1;
             product.setAmount(newProductAmount);
-            productRepository.save(product);
         }
+        productRepository.save(product);
     }
 
     @Override
