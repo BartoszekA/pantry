@@ -5,19 +5,24 @@ import io.dicedev.pantry.command.repository.ProductRepository;
 import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
 import io.dicedev.pantry.domain.service.ProductService;
+import io.dicedev.pantry.domain.validate.ProductValidator;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final List<ProductValidator> productValidator;
 
     @Override
     public ProductsDto getProducts() {
+        log.info("Getting all products");
         ProductsDto productsDto = new ProductsDto();
         productsDto.setProductsDto(new ArrayList<>());
         productRepository.findAll()
@@ -29,31 +34,39 @@ public class ProductServiceImpl implements ProductService {
                             .build();
                     productsDto.getProductsDto().add(productDto);
                 });
+        log.info("Found {} products", productsDto.getProductsDto().size());
         return productsDto;
     }
 
     @Override
     public void addProduct(ProductDto productDto) {
+        log.info("Adding product {}", productDto);
+        productValidator.forEach(it -> it.isValid(productDto));
         String productName = productDto.getName();
         ProductEntity product = productRepository.findByName(productName);
         if (Objects.isNull(product)) {
-            productRepository.save(ProductEntity.builder()
+            product = ProductEntity.builder()
                     .name(productDto.getName())
                     .amount(1)
-                    .build());
+                    .build();
         } else {
             Integer newProductAmount = product.getAmount() + 1;
             product.setAmount(newProductAmount);
-            productRepository.save(product);
         }
+        var productId = productRepository.save(product);
+        log.info("Product {} added", productId);
     }
 
     @Override
     public void renameProduct(ProductDto productDto) {
+        log.info("Renaming product {}", productDto);
         UUID productId = productDto.getId();
         Optional<ProductEntity> product = productRepository.findById(productId);
-        ProductEntity productEntity = product.get();
-        productEntity.setName(productDto.getName());
-        productRepository.save(productEntity);
+        if (product.isPresent()) {
+            ProductEntity productEntity = product.get();
+            productEntity.setName(productDto.getName());
+            productRepository.save(productEntity);
+            log.info("Product {} renamed", productDto);
+        }
     }
 }

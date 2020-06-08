@@ -15,8 +15,4 @@ public class ProductDto {
     private UUID id;
     private String name;
     private Integer amount;
-
-    public ProductDto(String name) {
-        this.name = name;
-    }
 }
