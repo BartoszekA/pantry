@@ -7,12 +7,14 @@ import io.dicedev.pantry.domain.dto.ProductsDto;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -20,6 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductsDto getProducts() {
+        log.info("Getting all products");
         ProductsDto productsDto = new ProductsDto();
         productsDto.setProductsDto(new ArrayList<>());
         productRepository.findAll()
@@ -31,11 +34,13 @@ public class ProductServiceImpl implements ProductService {
                             .build();
                     productsDto.getProductsDto().add(productDto);
                 });
+        log.info("Found {} products", productsDto.getProductsDto().size());
         return productsDto;
     }
 
     @Override
     public void addProduct(ProductDto productDto) {
+        log.info("Adding product {}", productDto);
         productValidator.forEach(it -> it.isValid(productDto));
         String productName = productDto.getName();
         ProductEntity product = productRepository.findByName(productName);
@@ -48,17 +53,20 @@ public class ProductServiceImpl implements ProductService {
             Integer newProductAmount = product.getAmount() + 1;
             product.setAmount(newProductAmount);
         }
-        productRepository.save(product);
+        var productId = productRepository.save(product);
+        log.info("Product {} added", productId);
     }
 
     @Override
     public void renameProduct(ProductDto productDto) {
+        log.info("Renaming product {}", productDto);
         UUID productId = productDto.getId();
         Optional<ProductEntity> product = productRepository.findById(productId);
         if (product.isPresent()) {
             ProductEntity productEntity = product.get();
             productEntity.setName(productDto.getName());
             productRepository.save(productEntity);
+            log.info("Product {} renamed", productDto);
         }
     }
 }

@@ -12,7 +12,7 @@ public class ProductAmountValidation implements ProductValidator {
     @Override
     public void isValid(ProductDto productDto) {
         var productAmount = productDto.getAmount();
-        if(Objects.isNull(productAmount) || productAmount <= 0) {
+        if (Objects.isNull(productAmount) || productAmount <= 0) {
             throw new PantryProductAmountException(ProductValidatorEnum.PANTRY_PRODUCT_AMOUNT_GREATER_THAN_ZERO.name());
         }
     }

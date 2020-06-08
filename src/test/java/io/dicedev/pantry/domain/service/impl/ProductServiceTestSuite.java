@@ -4,6 +4,7 @@ import io.dicedev.pantry.command.entity.ProductEntity;
 import io.dicedev.pantry.command.repository.ProductRepository;
 import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
+import io.dicedev.pantry.domain.exception.PantryProductNameException;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.security.InvalidKeyException;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ public class ProductServiceTestSuite {
     private ProductRepository productRepository;
 
     @Mock
-    private ProductValidator productValidator;
+    private List<ProductValidator> productValidator;
 
     @BeforeEach
     private void setUp() {
@@ -63,7 +63,7 @@ public class ProductServiceTestSuite {
 
         //When
         ProductsDto productsDto = productService.getProducts();
-        
+
         //Then
         assertAll(
                 () -> assertEquals(entityAmount, productsDto.getProductsDto().get(0).getAmount()),
@@ -80,7 +80,7 @@ public class ProductServiceTestSuite {
         ProductsDto result = productService.getProducts();
 
         //Then
-        assertNull(result);
+        assertEquals(0, result.getProductsDto().size());
     }
 
     @Test
@@ -98,7 +98,6 @@ public class ProductServiceTestSuite {
         productService.addProduct(productDto3);
         productService.addProduct(productDto4);
         productService.addProduct(productDto5);
-        ProductsDto productsDto = productService.getProducts();
 
         //Then
         Mockito.verify(productRepository, Mockito.times(5)).save(any());
@@ -152,5 +151,19 @@ public class ProductServiceTestSuite {
         //Then
         Mockito.verify(productRepository, Mockito.times(1)).findById(productDto.getId());
         Mockito.verify(productRepository, Mockito.times(0)).save(any());
+    }
+
+
+
+    @Test
+    public void shouldThrowPantryProductNameException() {
+        //Given
+        ProductDto productDto = new ProductDto();
+        productDto.setName("product");
+        PantryProductNameException thrown = assertThrows(
+                PantryProductNameException.class,
+                () -> productValidator.get(0).isValid(productDto));
+
+        assertTrue(thrown.getMessage().equals("PANTRY_PRODUCT_NAME_NO_SMALL_LETTER"));
     }
 }
