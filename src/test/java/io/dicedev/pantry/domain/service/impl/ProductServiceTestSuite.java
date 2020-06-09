@@ -4,7 +4,6 @@ import io.dicedev.pantry.command.entity.ProductEntity;
 import io.dicedev.pantry.command.repository.ProductRepository;
 import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
-import io.dicedev.pantry.domain.exception.PantryProductNameException;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -153,17 +153,36 @@ public class ProductServiceTestSuite {
         Mockito.verify(productRepository, Mockito.times(0)).save(any());
     }
 
-
-
     @Test
-    public void shouldThrowPantryProductNameException() {
+    public void shouldAdd10ProductsToProductWhichIsAlreadyInDatabase() {
         //Given
-        ProductDto productDto = new ProductDto();
-        productDto.setName("product");
-        PantryProductNameException thrown = assertThrows(
-                PantryProductNameException.class,
-                () -> productValidator.get(0).isValid(productDto));
+        Integer entityAmount = 10;
+        String entityName = "Product";
+        UUID entityId = UUID.randomUUID();
+        ProductDto productDto = ProductDto.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .build();
 
-        assertTrue(thrown.getMessage().equals("PANTRY_PRODUCT_NAME_NO_SMALL_LETTER"));
+        ProductEntity productEntity = ProductEntity.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .build();
+
+        ProductEntity expectedProductEntity = ProductEntity.builder()
+                .amount(20)
+                .name(entityName)
+                .id(entityId)
+                .build();
+
+        Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity);
+
+        //When
+        productService.addProduct(productDto);
+
+        //Then
+        Mockito.verify(productRepository, Mockito.times(1)).save(expectedProductEntity);
     }
 }

@@ -43,14 +43,15 @@ public class ProductServiceImpl implements ProductService {
         log.info("Adding product {}", productDto);
         productValidator.forEach(it -> it.isValid(productDto));
         String productName = productDto.getName();
+        Integer productAmount = productDto.getAmount();
         ProductEntity product = productRepository.findByName(productName);
         if (Objects.isNull(product)) {
             product = ProductEntity.builder()
                     .name(productDto.getName())
-                    .amount(1)
+                    .amount(productAmount)
                     .build();
         } else {
-            Integer newProductAmount = product.getAmount() + 1;
+            Integer newProductAmount = product.getAmount() + productAmount;
             product.setAmount(newProductAmount);
         }
         var productId = productRepository.save(product);
