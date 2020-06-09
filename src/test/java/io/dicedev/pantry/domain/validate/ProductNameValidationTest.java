@@ -4,7 +4,8 @@ import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.exception.PantryProductNameException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductNameValidationTest {
 

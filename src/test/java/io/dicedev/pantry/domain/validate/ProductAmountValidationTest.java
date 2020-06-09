@@ -2,7 +2,6 @@ package io.dicedev.pantry.domain.validate;
 
 import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.exception.PantryProductAmountException;
-import io.dicedev.pantry.domain.exception.PantryProductNameException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
