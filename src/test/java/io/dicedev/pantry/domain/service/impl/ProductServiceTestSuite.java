@@ -4,6 +4,7 @@ import io.dicedev.pantry.command.entity.ProductEntity;
 import io.dicedev.pantry.command.repository.ProductRepository;
 import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
+import io.dicedev.pantry.domain.enums.ProductCategoryEnum;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,12 +110,13 @@ public class ProductServiceTestSuite {
         Integer entityAmount = 1;
         String entityName = "Product";
         UUID entityId = UUID.randomUUID();
+        UUID categoryId = ProductCategoryEnum.FRUITS_AND_VEGETABLES.getId();
         ProductEntity productEntity1 = ProductEntity.builder()
                 .amount(entityAmount)
                 .name(entityName)
                 .id(entityId)
                 .build();
-        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount);
+        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount, categoryId);
 
         Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity1);
 

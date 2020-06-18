@@ -3,5 +3,7 @@ databaseChangeLog:
       file: db/changelog/01-create-product-schema.xml
   - include:
       file: db/changelog/02-update-product-schema.xml
+  - include:
+      file: db/changelog/03-update-product-schema-add-category-id.xml
 
 
