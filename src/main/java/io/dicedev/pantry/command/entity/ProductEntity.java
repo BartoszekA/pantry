@@ -21,4 +21,5 @@ public class ProductEntity {
     private String name;
     private Integer amount;
     private UUID categoryId;
+    private boolean deleted;
 }

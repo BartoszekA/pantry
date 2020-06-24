@@ -25,13 +25,14 @@ public class ProductServiceImpl implements ProductService {
         log.info("Getting all products");
         ProductsDto productsDto = new ProductsDto();
         productsDto.setProductsDto(new ArrayList<>());
-        productRepository.findAll()
+        productRepository.findByDeleted(false)
                 .forEach(product -> {
                     ProductDto productDto = ProductDto.builder()
                             .id(product.getId())
                             .name(product.getName())
                             .amount(product.getAmount())
                             .category(product.getCategoryId())
+                            .deleted(false)
                             .build();
                     productsDto.getProductsDto().add(productDto);
                 });
@@ -52,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
                     .name(productDto.getName())
                     .amount(productAmount)
                     .categoryId(categoryId)
+                    .deleted(false)
                     .build();
         } else {
             Integer newProductAmount = product.getAmount() + productAmount;
@@ -71,6 +73,19 @@ public class ProductServiceImpl implements ProductService {
             productEntity.setName(productDto.getName());
             productRepository.save(productEntity);
             log.info("Product {} renamed", productDto);
+        }
+    }
+
+    @Override
+    public void removeProduct(ProductDto productDto) {
+        log.info("Removing product {}", productDto);
+        UUID productId = productDto.getId();
+        Optional<ProductEntity> product = productRepository.findById(productId);
+        if (product.isPresent()) {
+            ProductEntity productEntity = product.get();
+            productEntity.setDeleted(true);
+            productRepository.save(productEntity);
+            log.info("Product {} deleted", productDto);
         }
     }
 }

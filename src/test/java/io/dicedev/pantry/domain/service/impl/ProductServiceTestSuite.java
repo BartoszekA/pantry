@@ -115,8 +115,9 @@ public class ProductServiceTestSuite {
                 .amount(entityAmount)
                 .name(entityName)
                 .id(entityId)
+                .deleted(false)
                 .build();
-        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount, categoryId);
+        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount, categoryId, false);
 
         Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity1);
 

@@ -37,4 +37,9 @@ public class PantryController {
     public void renameProduct(@RequestBody ProductDto productDto) {
         service.renameProduct(productDto);
     }
+
+    @DeleteMapping
+    public void removeProduct(@RequestBody ProductDto productDto) {
+        service.removeProduct(productDto);
+    }
 }
