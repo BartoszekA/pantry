@@ -14,8 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -191,47 +191,22 @@ public class ProductServiceTestSuite {
     }
 
     @Test
-    public void shouldReturnReturnOneProductWhenOneOfTwoProductsRemoved() {
+    public void shouldRemoveProduct() {
         //Given
-        Integer entityAmount = 1;
-        String entityName = "Product1";
-        UUID entityId = UUID.randomUUID();
-        Integer entity2Amount = 1;
-        String entity2Name = "Product2";
-        UUID entity2Id = UUID.randomUUID();
+        UUID productId = UUID.randomUUID();
+        ProductDto productDto = new ProductDto();
+        productDto.setId(productId);
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setId(productId);
+        productRepository.save(productEntity);
 
-        ProductEntity productEntity = ProductEntity.builder()
-                .amount(entityAmount)
-                .name(entityName)
-                .id(entityId)
-                .build();
-
-        ProductEntity productEntity2 = ProductEntity.builder()
-                .amount(entity2Amount)
-                .name(entity2Name)
-                .id(entity2Id)
-                .build();
-
-        List<ProductEntity> allProducts = new ArrayList<>();
-        allProducts.add(productEntity);
-        allProducts.add(productEntity2);
-
-        ProductDto productDto = ProductDto.builder()
-                .amount(entityAmount)
-                .name(entityName)
-                .id(entityId)
-                .build();
-
-        Mockito.when(productRepository.findByDeleted(false)).thenReturn(allProducts);
+        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(productEntity));
 
         //When
         productService.removeProduct(productDto);
-        ProductsDto productsDto = productService.getProducts();
 
         //Then
-        Mockito.verify(productRepository, Mockito.times(1)).delete(productEntity);
-        assertEquals(1, productsDto.getProductsDto().size());
-        assertEquals(true, productDto.isDeleted());
+        assertEquals(true, productEntity.isDeleted());
     }
 
 }
