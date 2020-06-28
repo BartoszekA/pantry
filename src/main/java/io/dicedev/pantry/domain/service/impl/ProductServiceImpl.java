@@ -25,14 +25,13 @@ public class ProductServiceImpl implements ProductService {
         log.info("Getting all products");
         ProductsDto productsDto = new ProductsDto();
         productsDto.setProductsDto(new ArrayList<>());
-        productRepository.findByDeleted(false)
+        productRepository.findByDeleted()
                 .forEach(product -> {
                     ProductDto productDto = ProductDto.builder()
                             .id(product.getId())
                             .name(product.getName())
                             .amount(product.getAmount())
                             .category(product.getCategoryId())
-                            .deleted(false)
                             .build();
                     productsDto.getProductsDto().add(productDto);
                 });

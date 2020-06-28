@@ -8,7 +8,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity(name = "PRODUCTS")
+@NamedQuery(
+        name = "ProductEntity.findByDeleted",
+        query = "FROM ProductEntity WHERE deleted = false"
+)
+@Entity
+@Table(name = "PRODUCTS")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

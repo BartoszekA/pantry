@@ -61,7 +61,7 @@ public class ProductServiceTestSuite {
                 .name(entityName)
                 .id(entityId)
                 .build());
-        Mockito.when(productRepository.findByDeleted(false)).thenReturn(allProducts);
+        Mockito.when(productRepository.findByDeleted()).thenReturn(allProducts);
 
         //When
         ProductsDto productsDto = productService.getProducts();
