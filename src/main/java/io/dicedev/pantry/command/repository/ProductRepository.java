@@ -15,6 +15,6 @@ public interface ProductRepository extends CrudRepository<ProductEntity, UUID> {
 
     Optional<ProductEntity> findById(UUID productId);
 
-    @Query
+    @Query(value = "SELECT p FROM ProductEntity p WHERE p.deleted = false")
     List<ProductEntity> findByDeleted();
 }

@@ -193,20 +193,27 @@ public class ProductServiceTestSuite {
     @Test
     public void shouldRemoveProduct() {
         //Given
-        UUID productId = UUID.randomUUID();
-        ProductDto productDto = new ProductDto();
-        productDto.setId(productId);
-        ProductEntity productEntity = new ProductEntity();
-        productEntity.setId(productId);
-        productRepository.save(productEntity);
+        Integer entityAmount = 10;
+        String entityName = "Product";
+        UUID entityId = UUID.randomUUID();
+        ProductDto productDto = ProductDto.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .build();
 
-        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(productEntity));
+        ProductEntity productEntity = ProductEntity.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .build();
+
+        Mockito.when(productRepository.findById(entityId)).thenReturn(Optional.of(productEntity));
 
         //When
         productService.removeProduct(productDto);
 
         //Then
-        assertEquals(true, productEntity.isDeleted());
+        Mockito.verify(productRepository, Mockito.times(1)).save(productEntity);
     }
-
 }

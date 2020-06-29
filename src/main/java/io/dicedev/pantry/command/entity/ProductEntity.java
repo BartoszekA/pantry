@@ -8,10 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.UUID;
 
-@NamedQuery(
-        name = "ProductEntity.findByDeleted",
-        query = "FROM ProductEntity WHERE deleted = false"
-)
 @Entity
 @Table(name = "PRODUCTS")
 @Builder
@@ -26,5 +22,5 @@ public class ProductEntity {
     private String name;
     private Integer amount;
     private UUID categoryId;
-    private boolean deleted;
+    private Boolean deleted;
 }

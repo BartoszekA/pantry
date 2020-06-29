@@ -40,6 +40,7 @@ public class PantryController {
 
     @DeleteMapping
     public void removeProduct(@RequestBody ProductDto productDto) {
+
         service.removeProduct(productDto);
     }
 }
