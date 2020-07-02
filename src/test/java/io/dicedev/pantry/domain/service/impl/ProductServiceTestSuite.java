@@ -200,12 +200,21 @@ public class ProductServiceTestSuite {
                 .amount(entityAmount)
                 .name(entityName)
                 .id(entityId)
+                .deleted(false)
                 .build();
 
         ProductEntity productEntity = ProductEntity.builder()
                 .amount(entityAmount)
                 .name(entityName)
                 .id(entityId)
+                .deleted(false)
+                .build();
+
+        ProductEntity expectedProductEntity = ProductEntity.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .deleted(true)
                 .build();
 
         Mockito.when(productRepository.findById(entityId)).thenReturn(Optional.of(productEntity));
@@ -214,6 +223,6 @@ public class ProductServiceTestSuite {
         productService.removeProduct(productDto);
 
         //Then
-        Mockito.verify(productRepository, Mockito.times(1)).save(productEntity);
+        Mockito.verify(productRepository, Mockito.times(1)).save(expectedProductEntity);
     }
 }

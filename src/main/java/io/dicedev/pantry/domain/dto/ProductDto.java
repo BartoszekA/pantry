@@ -16,5 +16,4 @@ public class ProductDto {
     private String name;
     private Integer amount;
     private UUID category;
-    private boolean deleted;
 }
