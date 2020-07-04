@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity(name = "PRODUCTS")
+@Entity
+@Table(name = "PRODUCTS")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,4 +22,5 @@ public class ProductEntity {
     private String name;
     private Integer amount;
     private UUID categoryId;
+    private Boolean deleted;
 }

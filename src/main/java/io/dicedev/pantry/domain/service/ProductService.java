@@ -9,4 +9,6 @@ public interface ProductService {
     void addProduct(ProductDto productDto);
 
     void renameProduct(ProductDto productDto);
+
+    void removeProduct(ProductDto productDto);
 }

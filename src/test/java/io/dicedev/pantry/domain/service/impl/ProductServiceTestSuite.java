@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -60,7 +61,7 @@ public class ProductServiceTestSuite {
                 .name(entityName)
                 .id(entityId)
                 .build());
-        Mockito.when(productRepository.findAll()).thenReturn(allProducts);
+        Mockito.when(productRepository.findByDeleted()).thenReturn(allProducts);
 
         //When
         ProductsDto productsDto = productService.getProducts();
@@ -115,8 +116,9 @@ public class ProductServiceTestSuite {
                 .amount(entityAmount)
                 .name(entityName)
                 .id(entityId)
+                .deleted(false)
                 .build();
-        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount, categoryId);
+        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount, categoryId, false);
 
         Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity1);
 
@@ -183,6 +185,42 @@ public class ProductServiceTestSuite {
 
         //When
         productService.addProduct(productDto);
+
+        //Then
+        Mockito.verify(productRepository, Mockito.times(1)).save(expectedProductEntity);
+    }
+
+    @Test
+    public void shouldRemoveProduct() {
+        //Given
+        Integer entityAmount = 10;
+        String entityName = "Product";
+        UUID entityId = UUID.randomUUID();
+        ProductDto productDto = ProductDto.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .deleted(false)
+                .build();
+
+        ProductEntity productEntity = ProductEntity.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .deleted(false)
+                .build();
+
+        ProductEntity expectedProductEntity = ProductEntity.builder()
+                .amount(entityAmount)
+                .name(entityName)
+                .id(entityId)
+                .deleted(true)
+                .build();
+
+        Mockito.when(productRepository.findById(entityId)).thenReturn(Optional.of(productEntity));
+
+        //When
+        productService.removeProduct(productDto);
 
         //Then
         Mockito.verify(productRepository, Mockito.times(1)).save(expectedProductEntity);
