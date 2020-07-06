@@ -7,4 +7,5 @@ databaseChangeLog:
       file: db/changelog/03-update-product-schema-add-category-id.xml
   - include:
       file: db/changelog/04-update-product-schema-add-deleted-field.xml
-
+  - include:
+      file: db/changelog/05-update-product-schema-add-location.xml
