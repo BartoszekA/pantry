@@ -5,6 +5,8 @@ import io.dicedev.pantry.command.repository.LocationRepository;
 import io.dicedev.pantry.domain.dto.LocationDto;
 import io.dicedev.pantry.domain.dto.LocationsDto;
 import io.dicedev.pantry.domain.service.LocationService;
+import io.dicedev.pantry.mapper.PlaceMapper;
+import io.dicedev.pantry.mapper.PlaceMapperImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.UUID;
 @Slf4j
 public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
+    private PlaceMapper placeMapper = new PlaceMapperImpl();
 
     @Override
     public LocationsDto getLocations() {
@@ -25,13 +28,7 @@ public class LocationServiceImpl implements LocationService {
         LocationsDto locationsDto = new LocationsDto();
         locationsDto.setLocationsDto(new ArrayList<>());
         locationRepository.findAll()
-                .forEach(locationEntity -> {
-                    LocationDto locationDto = LocationDto.builder()
-                            .id(locationEntity.getId())
-                            .name(locationEntity.getName())
-                            .build();
-                    locationsDto.getLocationsDto().add(locationDto);
-                });
+                .forEach(locationEntity -> placeMapper.locationEntityToLocationDto(locationEntity));
         log.info("Found following locations: {} ", locationsDto.toString());
         return locationsDto;
     }
