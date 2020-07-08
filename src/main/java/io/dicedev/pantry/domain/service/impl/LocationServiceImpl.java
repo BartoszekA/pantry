@@ -6,7 +6,6 @@ import io.dicedev.pantry.domain.dto.LocationDto;
 import io.dicedev.pantry.domain.dto.LocationsDto;
 import io.dicedev.pantry.domain.service.LocationService;
 import io.dicedev.pantry.mapper.PlaceMapper;
-import io.dicedev.pantry.mapper.PlaceMapperImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,8 @@ import java.util.UUID;
 @Slf4j
 public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
-    private PlaceMapper placeMapper = new PlaceMapperImpl();
+
+    private PlaceMapper placeMapper;
 
     @Override
     public LocationsDto getLocations() {
@@ -38,10 +38,7 @@ public class LocationServiceImpl implements LocationService {
         log.info("Adding location {}", locationDto);
         UUID locationId = locationDto.getId();
         String locationName = locationDto.getName();
-        LocationEntity locationEntity = LocationEntity.builder()
-                .id(locationId)
-                .name(locationName)
-                .build();
+        LocationEntity locationEntity = placeMapper.locationDtoToLocationEntity(locationDto);
         locationRepository.save(locationEntity);
         log.info("Location {} added.", locationId);
     }
