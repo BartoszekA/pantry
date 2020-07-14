@@ -7,6 +7,7 @@ import io.dicedev.pantry.domain.dto.ProductsDto;
 import io.dicedev.pantry.domain.enums.ProductCategoryEnum;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
+import io.dicedev.pantry.mapper.ProductMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,9 @@ public class ProductServiceTestSuite {
     ProductService productService;
 
     @Mock
+    private ProductMapper productMapper;
+
+    @Mock
     private ProductRepository productRepository;
 
     @Mock
@@ -35,7 +39,7 @@ public class ProductServiceTestSuite {
 
     @BeforeEach
     private void setUp() {
-        productService = new ProductServiceImpl(productRepository, productValidator);
+        productService = new ProductServiceImpl(productMapper, productRepository, productValidator);
     }
 
     @Test
@@ -56,12 +60,18 @@ public class ProductServiceTestSuite {
         Integer entityAmount = 1;
         String entityName = "Product1";
         UUID entityId = UUID.randomUUID();
-        List<ProductEntity> allProducts = List.of(ProductEntity.builder()
-                .amount(entityAmount)
-                .name(entityName)
+        UUID categoryId = UUID.randomUUID();
+        ProductDto productDto = new ProductDto(entityId, entityName, entityAmount, categoryId);
+        ProductEntity productEntity = ProductEntity.builder()
                 .id(entityId)
-                .build());
+                .name(entityName)
+                .amount(entityAmount)
+                .categoryId(categoryId)
+                .deleted(false)
+                .build();
+        List<ProductEntity> allProducts = List.of(productEntity);
         Mockito.when(productRepository.findByDeleted()).thenReturn(allProducts);
+        Mockito.when(productMapper.productEntityToProductDto(productEntity)).thenReturn(productDto);
 
         //When
         ProductsDto productsDto = productService.getProducts();
