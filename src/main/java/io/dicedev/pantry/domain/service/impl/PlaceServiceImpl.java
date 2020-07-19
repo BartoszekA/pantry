@@ -37,7 +37,6 @@ public class PlaceServiceImpl implements PlaceService {
     public void addPlace(PlaceDto placeDto) {
         log.info("Adding location {}", placeDto);
         UUID placeId = placeDto.getId();
-        String placeName = placeDto.getName();
         PlaceEntity placeEntity = placeMapper.placeDtoToPlaceEntity(placeDto);
         placeRepository.save(placeEntity);
         log.info("Location {} added.", placeId);
