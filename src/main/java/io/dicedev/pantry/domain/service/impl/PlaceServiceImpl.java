@@ -28,7 +28,7 @@ public class PlaceServiceImpl implements PlaceService {
         PlacesDto placesDto = new PlacesDto();
         placesDto.setPlacesDto(new ArrayList<>());
         placeRepository.findAll()
-                .forEach(placeEntity -> placeMapper.placeEntityToPlaceDto(placeEntity));
+                .forEach(placeEntity -> placesDto.getPlacesDto().add(placeMapper.placeEntityToPlaceDto(placeEntity)));
         log.info("Found following places: {} ", placesDto.toString());
         return placesDto;
     }
