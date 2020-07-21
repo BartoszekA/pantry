@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/04-update-product-schema-add-deleted-field.xml
   - include:
       file: db/changelog/05-update-product-schema-add-location.xml
+  - include:
+      file: db/changelog/06-update-product-schema-rename-location-to-place.xml

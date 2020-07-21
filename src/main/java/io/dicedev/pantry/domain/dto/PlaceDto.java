@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LocationDto {
+public class PlaceDto {
     private UUID id;
     private String name;
 }
