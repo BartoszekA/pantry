@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ProductCategoryValidator implements ProductValidator {
     @Override
     public void isValid(ProductDto productDto) {
-        var productCategory = productDto.getCategory();
+        var productCategory = productDto.getCategoryId();
         if (productCategory == null) {
             throw new PantryProductCategoryException(ProductValidatorEnum.PANTRY_PRODUCT_CATEGORY_NOT_CHOSEN.name());
         }
