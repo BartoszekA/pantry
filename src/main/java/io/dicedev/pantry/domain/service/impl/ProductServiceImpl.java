@@ -1,5 +1,6 @@
 package io.dicedev.pantry.domain.service.impl;
 
+import io.dicedev.pantry.command.entity.CategoryEntity;
 import io.dicedev.pantry.command.entity.ProductEntity;
 import io.dicedev.pantry.command.repository.ProductRepository;
 import io.dicedev.pantry.domain.dto.ProductDto;
@@ -31,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
                             .id(product.getId())
                             .name(product.getName())
                             .amount(product.getAmount())
-                            .category(product.getCategoryId())
+                            .category(product.getCategory())
                             .build();
                     productsDto.getProductsDto().add(productDto);
                 });
@@ -45,13 +46,13 @@ public class ProductServiceImpl implements ProductService {
         productValidator.forEach(it -> it.isValid(productDto));
         String productName = productDto.getName();
         Integer productAmount = productDto.getAmount();
-        UUID categoryId = productDto.getCategory();
+        CategoryEntity category = productDto.getCategory();
         ProductEntity product = productRepository.findByName(productName);
         if (Objects.isNull(product)) {
             product = ProductEntity.builder()
                     .name(productDto.getName())
                     .amount(productAmount)
-                    .categoryId(categoryId)
+                    .category(category)
                     .deleted(false)
                     .build();
         } else {

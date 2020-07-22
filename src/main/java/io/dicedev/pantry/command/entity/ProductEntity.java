@@ -21,6 +21,7 @@ public class ProductEntity {
     private UUID id;
     private String name;
     private Integer amount;
-    private UUID categoryId;
+    @ManyToOne
+    private CategoryEntity category;
     private Boolean deleted;
 }
