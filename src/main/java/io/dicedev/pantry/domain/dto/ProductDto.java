@@ -16,4 +16,5 @@ public class ProductDto {
     private String name;
     private Integer amount;
     private CategoryDto category;
+    private Boolean deleted;
 }
