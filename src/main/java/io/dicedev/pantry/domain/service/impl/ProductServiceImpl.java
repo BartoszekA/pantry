@@ -7,7 +7,7 @@ import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
-import io.dicedev.pantry.mapper.CategoryMapper;
+import io.dicedev.pantry.mapper.ProductMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,7 @@ import java.util.*;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
+    private ProductMapper productMapper;
     private final ProductRepository productRepository;
     private final List<ProductValidator> productValidator;
     private final CategoryMapper categoryMapper;
@@ -29,16 +30,10 @@ public class ProductServiceImpl implements ProductService {
         ProductsDto productsDto = new ProductsDto();
         productsDto.setProductsDto(new ArrayList<>());
         productRepository.findByDeleted()
-                .forEach(product -> {
-                    ProductDto productDto = ProductDto.builder()
-                            .id(product.getId())
-                            .name(product.getName())
-                            .amount(product.getAmount())
-                            .category(categoryMapper.categoryEntityToCategoryDto(product.getCategory()))
-                            .build();
-                    productsDto.getProductsDto().add(productDto);
-                });
-        log.info("Found {} products", productsDto.getProductsDto().size());
+                .stream()
+                .map(product -> productMapper.productEntityToProductDto(product))
+                .forEach(productDto -> productsDto.getProductsDto().add(productDto));
+        log.info("Found {} product(s)", productsDto.getProductsDto().size());
         return productsDto;
     }
 
@@ -48,16 +43,10 @@ public class ProductServiceImpl implements ProductService {
         productValidator.forEach(it -> it.isValid(productDto));
         String productName = productDto.getName();
         Integer productAmount = productDto.getAmount();
-        CategoryEntity category = categoryMapper.categoryDtoToCategoryEntity(productDto.getCategory()
-        );
         ProductEntity product = productRepository.findByName(productName);
         if (Objects.isNull(product)) {
-            product = ProductEntity.builder()
-                    .name(productDto.getName())
-                    .amount(productAmount)
-                    .category(category)
-                    .deleted(false)
-                    .build();
+            product = productMapper.productDtoToProductEntity(productDto);
+
         } else {
             Integer newProductAmount = product.getAmount() + productAmount;
             product.setAmount(newProductAmount);
