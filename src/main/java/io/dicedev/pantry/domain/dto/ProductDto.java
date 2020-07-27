@@ -15,5 +15,5 @@ public class ProductDto {
     private UUID id;
     private String name;
     private Integer amount;
-    private UUID categoryId;
+    private CategoryDto category;
 }

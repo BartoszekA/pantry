@@ -10,9 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -26,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoriesDto getCategories() {
         log.info("Getting all categories");
+
         CategoriesDto categoriesDto = new CategoriesDto();
         categoriesDto.setCategoriesDto(new ArrayList<>());
         categoryRepository.findAll()
@@ -46,6 +45,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void renameCategory(CategoryDto categoryDto) {
-
+        log.info("Renaming category {}", categoryDto);
+        UUID categoryId = categoryDto.getId();
+        Optional<CategoryEntity> category = categoryRepository.findById(categoryId);
+        if (category.isPresent()) {
+            CategoryEntity categoryEntity = category.get();
+            categoryEntity.setName(categoryDto.getName());
+            categoryRepository.save(categoryEntity);
+            log.info("Category {} renamed", categoryDto);
+        }
     }
 }

@@ -11,3 +11,7 @@ databaseChangeLog:
       file: db/changelog/05-update-product-schema-add-location.xml
   - include:
       file: db/changelog/06-update-product-schema-rename-location-to-place.xml
+  - include:
+      file: db/changelog/07-create-category-schema.xml
+  - include:
+      file: db/changelog/08-update-category-schema-insert-categories.xml

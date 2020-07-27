@@ -1,5 +1,6 @@
 package io.dicedev.pantry.domain.service.impl;
 
+import io.dicedev.pantry.command.entity.CategoryEntity;
 import io.dicedev.pantry.command.entity.ProductEntity;
 import io.dicedev.pantry.command.repository.ProductRepository;
 import io.dicedev.pantry.domain.dto.ProductDto;
@@ -121,6 +122,7 @@ public class ProductServiceTestSuite {
         Integer entityAmount = 1;
         String entityName = "Product";
         UUID entityId = UUID.randomUUID();
+        CategoryEntity category = new CategoryEntity();
         UUID categoryId = ProductCategoryEnum.FRUITS_AND_VEGETABLES.getId();
         ProductEntity productEntity1 = ProductEntity.builder()
                 .amount(entityAmount)
@@ -128,7 +130,7 @@ public class ProductServiceTestSuite {
                 .id(entityId)
                 .deleted(false)
                 .build();
-        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount, categoryId);
+        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount, category);
 
         Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity1);
 
