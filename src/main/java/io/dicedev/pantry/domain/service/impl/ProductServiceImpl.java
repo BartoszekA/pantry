@@ -7,6 +7,7 @@ import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
+import io.dicedev.pantry.mapper.CategoryMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final List<ProductValidator> productValidator;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public ProductsDto getProducts() {
@@ -32,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
                             .id(product.getId())
                             .name(product.getName())
                             .amount(product.getAmount())
-                            .category(product.getCategory())
+                            .category(categoryMapper.categoryEntityToCategoryDto(product.getCategory()))
                             .build();
                     productsDto.getProductsDto().add(productDto);
                 });
@@ -46,7 +48,8 @@ public class ProductServiceImpl implements ProductService {
         productValidator.forEach(it -> it.isValid(productDto));
         String productName = productDto.getName();
         Integer productAmount = productDto.getAmount();
-        CategoryEntity category = productDto.getCategory();
+        CategoryEntity category = categoryMapper.categoryDtoToCategoryEntity(productDto.getCategory()
+        );
         ProductEntity product = productRepository.findByName(productName);
         if (Objects.isNull(product)) {
             product = ProductEntity.builder()

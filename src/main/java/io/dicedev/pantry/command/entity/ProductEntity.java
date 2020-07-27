@@ -21,7 +21,11 @@ public class ProductEntity {
     private UUID id;
     private String name;
     private Integer amount;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
+    @JoinColumn(name = "CATEGORY",
+            referencedColumnName = "ID",
+            foreignKey = @ForeignKey(name = "FK_CATEGORY_TO_PRODUCT"))
     private CategoryEntity category;
     private Boolean deleted;
 }

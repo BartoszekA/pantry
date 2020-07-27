@@ -4,7 +4,6 @@ import io.dicedev.pantry.command.entity.CategoryEntity;
 import io.dicedev.pantry.command.repository.CategoryRepository;
 import io.dicedev.pantry.domain.dto.CategoriesDto;
 import io.dicedev.pantry.domain.dto.CategoryDto;
-import io.dicedev.pantry.domain.enums.ProductCategoryEnum;
 import io.dicedev.pantry.domain.service.CategoryService;
 import io.dicedev.pantry.mapper.CategoryMapper;
 import lombok.AllArgsConstructor;
@@ -22,13 +21,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryMapper categoryMapper;
 
-    //private ProductCategoryEnum productCategoryEnum;
-
     @Override
     public CategoriesDto getCategories() {
         log.info("Getting all categories");
 
-        List<ProductCategoryEnum> productCategoryEnums = Arrays.asList(ProductCategoryEnum.values());
         CategoriesDto categoriesDto = new CategoriesDto();
         categoriesDto.setCategoriesDto(new ArrayList<>());
         categoryRepository.findAll()

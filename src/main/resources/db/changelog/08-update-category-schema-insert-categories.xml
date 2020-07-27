@@ -1,0 +1,54 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="AgnieszkaBartoszek" id="25072020">
+
+        <insert tableName="CATEGORIES">
+            <column name = "id" value="4e457900-b16e-11ea-b3de-0242ac130004" type="uuid"/>
+            <column name = "name" value="Dairy" type="varchar(50)"/>
+        </insert>
+
+        <insert tableName="CATEGORIES">
+            <column name = "id" value="4e457b62-b16e-11ea-b3de-0242ac130004" type="uuid"/>
+            <column name = "name" value="Fruits and vegetables" type="varchar(50)"/>
+        </insert>
+
+        <insert tableName="CATEGORIES">
+            <column name = "id" value="4e457c66-b16e-11ea-b3de-0242ac130004" type="uuid"/>
+            <column name = "name" value="Loose products" type="varchar(50)"/>
+        </insert>
+
+        <insert tableName="CATEGORIES">
+            <column name = "id" value="4e457d4c-b16e-11ea-b3de-0242ac130004" type="uuid"/>
+            <column name = "name" value="Bread" type="varchar(50)"/>
+        </insert>
+
+        <insert tableName="CATEGORIES">
+            <column name = "id" value="4e457fb8-b16e-11ea-b3de-0242ac130004" type="uuid"/>
+            <column name = "name" value="Sweets" type="varchar(50)"/>
+        </insert>
+
+        <insert tableName="CATEGORIES">
+            <column name = "id" value="4e45809e-b16e-11ea-b3de-0242ac130004" type="uuid"/>
+            <column name = "name" value="Coffee and tea" type="varchar(50)"/>
+        </insert>
+
+        <insert tableName="CATEGORIES">
+            <column name = "id" value="4e458166-b16e-11ea-b3de-0242ac130004" type="uuid"/>
+            <column name = "name" value="Canned food" type="varchar(50)"/>
+        </insert>
+
+        <renameColumn tableName="PRODUCTS"
+                      newColumnName="category"
+                      oldColumnName="category_id"/>
+
+        <addForeignKeyConstraint baseTableName="PRODUCTS" baseColumnNames="category"
+                                 constraintName="FK_CATEGORY_TO_PRODUCT"
+                                 referencedTableName="CATEGORIES"
+                                 referencedColumnNames="ID" />
+
+    </changeSet>
+</databaseChangeLog>
