@@ -29,8 +29,8 @@ public class ProductServiceImpl implements ProductService {
         productsDto.setProductsDto(new ArrayList<>());
         productRepository.findByDeleted()
                 .stream()
-                .map(product -> productMapper.productEntityToProductDto(product))
-                .forEach(productDto -> productsDto.getProductsDto().add(productDto));
+                .map(productMapper::productEntityToProductDto)
+                .forEach(productsDto.getProductsDto()::add);
         log.info("Found {} product(s)", productsDto.getProductsDto().size());
         return productsDto;
     }
