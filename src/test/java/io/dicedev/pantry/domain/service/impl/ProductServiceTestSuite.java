@@ -3,9 +3,9 @@ package io.dicedev.pantry.domain.service.impl;
 import io.dicedev.pantry.command.entity.CategoryEntity;
 import io.dicedev.pantry.command.entity.ProductEntity;
 import io.dicedev.pantry.command.repository.ProductRepository;
+import io.dicedev.pantry.domain.dto.CategoryDto;
 import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
-import io.dicedev.pantry.domain.enums.ProductCategoryEnum;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
 import io.dicedev.pantry.mapper.ProductMapper;
@@ -61,13 +61,14 @@ public class ProductServiceTestSuite {
         Integer entityAmount = 1;
         String entityName = "Product1";
         UUID entityId = UUID.randomUUID();
-        UUID categoryId = UUID.randomUUID();
-        ProductDto productDto = new ProductDto(entityId, entityName, entityAmount, categoryId);
+        CategoryDto categoryDto = new CategoryDto();
+        CategoryEntity categoryEntity = new CategoryEntity();
+        ProductDto productDto = new ProductDto(entityId, entityName, entityAmount, categoryDto, true);
         ProductEntity productEntity = ProductEntity.builder()
                 .id(entityId)
                 .name(entityName)
                 .amount(entityAmount)
-                .categoryId(categoryId)
+                .category(categoryEntity)
                 .deleted(false)
                 .build();
         List<ProductEntity> allProducts = List.of(productEntity);
@@ -122,20 +123,20 @@ public class ProductServiceTestSuite {
         Integer entityAmount = 1;
         String entityName = "Product";
         UUID entityId = UUID.randomUUID();
-        CategoryEntity category = new CategoryEntity();
-        UUID categoryId = ProductCategoryEnum.FRUITS_AND_VEGETABLES.getId();
+        CategoryEntity categoryEntity = new CategoryEntity();
+        CategoryDto categoryDto = new CategoryDto();
         ProductEntity productEntity1 = ProductEntity.builder()
                 .amount(entityAmount)
                 .name(entityName)
                 .id(entityId)
                 .deleted(false)
                 .build();
-        ProductDto productDto1 = new ProductDto(entityId, entityName, entityAmount, category);
+        ProductDto productDto = new ProductDto(entityId, entityName, entityAmount, categoryDto, false);
 
         Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity1);
 
         //When
-        productService.addProduct(productDto1);
+        productService.addProduct(productDto);
 
         //Then
         Mockito.verify(productRepository, Mockito.times(1)).save(productEntity1);
