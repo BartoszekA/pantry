@@ -87,6 +87,48 @@ public class ProductServiceTestSuite {
     }
 
     @Test
+    public void shouldIncreaseAmountOfExistingProductAfterAddingProductWithTheSameNameDifferentLetters() {
+        //Given
+        String expectedName = "Orange";
+        String testedName = "OrAnGe";
+        UUID id = UUID.randomUUID();
+        Integer amount = 1;
+        CategoryDto categoryDto = new CategoryDto();
+        CategoryEntity categoryEntity = new CategoryEntity();
+        ProductDto productDto = ProductDto.builder()
+                .id(id)
+                .name(testedName)
+                .amount(amount)
+                .category(categoryDto)
+                .deleted(false)
+                .build();
+        ProductEntity expectedEntity = ProductEntity.builder()
+                .id(id)
+                .name(expectedName)
+                .amount(amount)
+                .category(categoryEntity)
+                .deleted(false)
+                .build();
+
+        ProductEntity expectedProductEntity = ProductEntity.builder()
+                .id(id)
+                .name(expectedName)
+                .amount(2)
+                .category(categoryEntity)
+                .deleted(false)
+                .build();
+
+        Mockito.when(productRepository.findByName(expectedName)).thenReturn(expectedEntity);
+
+
+        //When
+        productService.addProduct(productDto);
+
+        //Then
+        Mockito.verify(productRepository, Mockito.times(1)).save(expectedProductEntity);
+    }
+
+    @Test
     public void shouldGetEmptyProductListWhenNoProductAdded() {
         //Given
 
@@ -123,9 +165,8 @@ public class ProductServiceTestSuite {
         Integer entityAmount = 1;
         String entityName = "Product";
         UUID entityId = UUID.randomUUID();
-        CategoryEntity categoryEntity = new CategoryEntity();
         CategoryDto categoryDto = new CategoryDto();
-        ProductEntity productEntity1 = ProductEntity.builder()
+        ProductEntity productEntity = ProductEntity.builder()
                 .amount(entityAmount)
                 .name(entityName)
                 .id(entityId)
@@ -133,14 +174,14 @@ public class ProductServiceTestSuite {
                 .build();
         ProductDto productDto = new ProductDto(entityId, entityName, entityAmount, categoryDto, false);
 
-        Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity1);
+        Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity);
 
         //When
         productService.addProduct(productDto);
 
         //Then
-        Mockito.verify(productRepository, Mockito.times(1)).save(productEntity1);
-        assertEquals(2, productEntity1.getAmount());
+        Mockito.verify(productRepository, Mockito.times(1)).save(productEntity);
+        assertEquals(2, productEntity.getAmount());
     }
 
     @Test

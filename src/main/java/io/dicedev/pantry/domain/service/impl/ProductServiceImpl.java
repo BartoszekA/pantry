@@ -29,8 +29,8 @@ public class ProductServiceImpl implements ProductService {
         productsDto.setProductsDto(new ArrayList<>());
         productRepository.findByDeleted()
                 .stream()
-                .map(product -> productMapper.productEntityToProductDto(product))
-                .forEach(productDto -> productsDto.getProductsDto().add(productDto));
+                .map(productMapper::productEntityToProductDto)
+                .forEach(productsDto.getProductsDto()::add);
         log.info("Found {} product(s)", productsDto.getProductsDto().size());
         return productsDto;
     }
@@ -39,12 +39,10 @@ public class ProductServiceImpl implements ProductService {
     public void addProduct(ProductDto productDto) {
         log.info("Adding product {}", productDto);
         productValidator.forEach(it -> it.isValid(productDto));
-        String productName = productDto.getName();
         Integer productAmount = productDto.getAmount();
-        ProductEntity product = productRepository.findByName(productName);
+        ProductEntity product = checkIfNameAlreadyExists(productDto);
         if (Objects.isNull(product)) {
             product = productMapper.productDtoToProductEntity(productDto);
-
         } else {
             Integer newProductAmount = product.getAmount() + productAmount;
             product.setAmount(newProductAmount);
@@ -78,4 +76,12 @@ public class ProductServiceImpl implements ProductService {
             log.info("Product {} deleted", productDto);
         }
     }
+
+    private ProductEntity checkIfNameAlreadyExists(ProductDto productDto) {
+        String productName = productDto.getName().toLowerCase();
+        String name = productName.substring(0, 1).toUpperCase() + productName.substring(1);
+        ProductEntity product = productRepository.findByName(name);
+        return product;
+    }
+
 }
