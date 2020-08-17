@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface ProductRepository extends CrudRepository<ProductEntity, UUID> {
-    ProductEntity findByName(String name);
+    Optional<ProductEntity> findByName(String name);
 
     Optional<ProductEntity> findById(UUID productId);
 

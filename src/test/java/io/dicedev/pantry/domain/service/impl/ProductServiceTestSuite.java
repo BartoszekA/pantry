@@ -46,7 +46,17 @@ public class ProductServiceTestSuite {
     @Test
     public void shouldGetOneProductAfterAddingOneProduct() {
         //Given
-        ProductDto productDto = new ProductDto();
+        Integer productAmount = 1;
+        String productName = "Product";
+        UUID productId = UUID.randomUUID();
+        CategoryDto categoryDto = new CategoryDto();
+        ProductDto productDto = ProductDto.builder()
+                .id(productId)
+                .name(productName)
+                .amount(productAmount)
+                .category(categoryDto)
+                .deleted(false)
+                .build();
 
         //When
         productService.addProduct(productDto);
@@ -118,7 +128,7 @@ public class ProductServiceTestSuite {
                 .deleted(false)
                 .build();
 
-        Mockito.when(productRepository.findByName(expectedName)).thenReturn(expectedEntity);
+        Mockito.when(productRepository.findByName(expectedName)).thenReturn(Optional.ofNullable(expectedEntity));
 
 
         //When
@@ -140,23 +150,51 @@ public class ProductServiceTestSuite {
     }
 
     @Test
-    public void shouldGetFiveProductsAfterAddingFiveProducts() {
+    public void shouldGetThreeProductsAfterAddingThreeProducts() {
         //Given
-        ProductDto productDto1 = new ProductDto();
-        ProductDto productDto2 = new ProductDto();
-        ProductDto productDto3 = new ProductDto();
-        ProductDto productDto4 = new ProductDto();
-        ProductDto productDto5 = new ProductDto();
+        Integer productAmount1 = 1;
+        String productName1 = "Product1";
+        UUID productId1 = UUID.randomUUID();
+        CategoryDto categoryDto1 = new CategoryDto();
+        ProductDto productDto1 = ProductDto.builder()
+                .id(productId1)
+                .name(productName1)
+                .amount(productAmount1)
+                .category(categoryDto1)
+                .deleted(false)
+                .build();
+
+        Integer productAmount2 = 1;
+        String productName2 = "Product2";
+        UUID productId2 = UUID.randomUUID();
+        CategoryDto categoryDto2 = new CategoryDto();
+        ProductDto productDto2 = ProductDto.builder()
+                .id(productId2)
+                .name(productName2)
+                .amount(productAmount2)
+                .category(categoryDto2)
+                .deleted(false)
+                .build();
+
+        Integer productAmount3 = 1;
+        String productName3 = "Product3";
+        UUID productId3 = UUID.randomUUID();
+        CategoryDto categoryDto3 = new CategoryDto();
+        ProductDto productDto3 = ProductDto.builder()
+                .id(productId3)
+                .name(productName3)
+                .amount(productAmount3)
+                .category(categoryDto3)
+                .deleted(false)
+                .build();
 
         //When
         productService.addProduct(productDto1);
         productService.addProduct(productDto2);
         productService.addProduct(productDto3);
-        productService.addProduct(productDto4);
-        productService.addProduct(productDto5);
 
         //Then
-        Mockito.verify(productRepository, Mockito.times(5)).save(any());
+        Mockito.verify(productRepository, Mockito.times(3)).save(any());
     }
 
     @Test
@@ -172,30 +210,63 @@ public class ProductServiceTestSuite {
                 .id(entityId)
                 .deleted(false)
                 .build();
-        ProductDto productDto = new ProductDto(entityId, entityName, entityAmount, categoryDto, false);
+        ProductDto productDto = ProductDto.builder()
+                .id(entityId)
+                .name(entityName)
+                .amount(entityAmount)
+                .category(categoryDto)
+                .deleted(false)
+                .build();
+        ProductEntity expectedProductEntity = ProductEntity.builder()
+                .amount(entityAmount + 1)
+                .name(entityName)
+                .id(entityId)
+                .deleted(false)
+                .build();
 
-        Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity);
+        Mockito.when(productRepository.findByName(entityName)).thenReturn(Optional.ofNullable(productEntity));
 
         //When
         productService.addProduct(productDto);
 
         //Then
-        Mockito.verify(productRepository, Mockito.times(1)).save(productEntity);
-        assertEquals(2, productEntity.getAmount());
+        Mockito.verify(productRepository, Mockito.times(1)).save(expectedProductEntity);
     }
 
     @Test
     public void shouldRenameOneExistingProduct() {
         //Given
-        ProductDto productDto = new ProductDto();
+        Integer productAmount = 1;
+        String productName = "Product";
+        UUID productId = UUID.randomUUID();
+        CategoryDto categoryDto = new CategoryDto();
+        CategoryEntity categoryEntity = new CategoryEntity();
+        ProductDto productDto = ProductDto.builder()
+                .id(productId)
+                .name(productName)
+                .amount(productAmount)
+                .category(categoryDto)
+                .deleted(false)
+                .build();
+
+        ProductEntity expectedEntity = ProductEntity.builder()
+                .id(productId)
+                .name(productName)
+                .amount(productAmount)
+                .category(categoryEntity)
+                .deleted(false)
+                .build();
+
+
         productService.addProduct(productDto);
+        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(expectedEntity));
 
         //When
         productService.renameProduct(productDto);
 
         //Then
         Mockito.verify(productRepository, Mockito.times(1)).findById(productDto.getId());
-        Mockito.verify(productRepository, Mockito.times(1)).save(any());
+        Mockito.verify(productRepository, Mockito.times(2)).save(any());
     }
 
     @Test
@@ -235,7 +306,7 @@ public class ProductServiceTestSuite {
                 .id(entityId)
                 .build();
 
-        Mockito.when(productRepository.findByName(entityName)).thenReturn(productEntity);
+        Mockito.when(productRepository.findByName(entityName)).thenReturn(Optional.ofNullable(productEntity));
 
         //When
         productService.addProduct(productDto);

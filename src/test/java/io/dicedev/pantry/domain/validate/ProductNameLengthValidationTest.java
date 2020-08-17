@@ -4,12 +4,11 @@ import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.exception.PantryProductNameLengthException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductNameLengthValidationTest {
 
-    private ProductValidator productNameLengthValidator = new ProductNameLengthValidation();
+    private final ProductValidator productNameLengthValidator = new ProductNameLengthValidation();
 
     @Test
     public void shouldThrowAnExceptionWhenProductNameHas2Letters() {
@@ -21,6 +20,6 @@ public class ProductNameLengthValidationTest {
         var exception = assertThrows(PantryProductNameLengthException.class, () -> productNameLengthValidator.isValid(productDto));
 
         //Then
-        assertTrue(exception.getMessage().equals("PANTRY_PRODUCT_NAME_MIN_3_LETTERS"));
+        assertEquals(exception.getMessage(), "PANTRY_PRODUCT_NAME_MIN_3_LETTERS");
     }
 }

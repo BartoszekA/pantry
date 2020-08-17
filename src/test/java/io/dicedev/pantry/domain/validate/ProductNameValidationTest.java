@@ -4,12 +4,12 @@ import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.exception.PantryProductNameException;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductNameValidationTest {
 
-    private ProductValidator productNameValidation = new ProductNameValidation();
+    private final ProductValidator productNameValidation = new ProductNameValidation();
 
     @Test
     public void shouldValidateProductName() {
@@ -21,6 +21,6 @@ class ProductNameValidationTest {
         var exception = assertThrows(PantryProductNameException.class, () -> productNameValidation.isValid(productDto));
 
         //Then
-        assertTrue(exception.getMessage().equals("PANTRY_PRODUCT_NAME_NO_SMALL_LETTER"));
+        assertEquals(exception.getMessage(), "PANTRY_PRODUCT_NAME_NO_SMALL_LETTER");
     }
 }

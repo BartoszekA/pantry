@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductAmountValidationTest {
 
-    private ProductValidator productAmountValidation = new ProductAmountValidation();
+    private final ProductValidator productAmountValidation = new ProductAmountValidation();
 
     @Test
     public void shouldThrowAnExceptionWhenProductAmountIsNull() {

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ProductCategoryValidationTest {
 
-    private ProductCategoryValidator productCategoryValidator = new ProductCategoryValidator();
+    private final ProductCategoryValidator productCategoryValidator = new ProductCategoryValidator();
 
     @Test
     public void shouldThrowExceptionIfCategoryIsNull() {

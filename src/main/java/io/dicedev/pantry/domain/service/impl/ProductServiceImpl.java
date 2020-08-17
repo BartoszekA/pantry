@@ -11,14 +11,18 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.BiFunction;
 
 @Service
 @AllArgsConstructor
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-    private ProductMapper productMapper;
+    private final ProductMapper productMapper;
     private final ProductRepository productRepository;
     private final List<ProductValidator> productValidator;
 
@@ -39,16 +43,13 @@ public class ProductServiceImpl implements ProductService {
     public void addProduct(ProductDto productDto) {
         log.info("Adding product {}", productDto);
         productValidator.forEach(it -> it.isValid(productDto));
-        Integer productAmount = productDto.getAmount();
-        ProductEntity product = checkIfNameAlreadyExists(productDto);
-        if (Objects.isNull(product)) {
-            product = productMapper.productDtoToProductEntity(productDto);
-        } else {
-            Integer newProductAmount = product.getAmount() + productAmount;
-            product.setAmount(newProductAmount);
-        }
-        var productId = productRepository.save(product);
-        log.info("Product {} added", productId);
+        var name = formattedName(productDto);
+        ProductEntity productEntity = productRepository.findByName(name)
+                .map(entity -> calculateAmount(entity, productDto, (e, d) -> Integer.sum(e.getAmount(),
+                        d.getAmount())))
+                .orElse(productMapper.productDtoToProductEntity(productDto));
+        productRepository.save(productEntity);
+        log.info("Product {} added", productDto.getId());
     }
 
     @Override
@@ -77,11 +78,15 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private ProductEntity checkIfNameAlreadyExists(ProductDto productDto) {
+    private String formattedName(ProductDto productDto) {
         String productName = productDto.getName().toLowerCase();
-        String name = productName.substring(0, 1).toUpperCase() + productName.substring(1);
-        ProductEntity product = productRepository.findByName(name);
-        return product;
+        return productName.substring(0, 1).toUpperCase() + productName.substring(1);
     }
 
+    private ProductEntity calculateAmount(ProductEntity productEntity, ProductDto productDto,
+                                          BiFunction<ProductEntity, ProductDto, Integer> biFunction) {
+        Integer result = biFunction.apply(productEntity, productDto);
+        productEntity.setAmount(result);
+        return productEntity;
+    }
 }

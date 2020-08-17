@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PantryController {
 
-    private ProductService service;
+    private final ProductService service;
 
     @GetMapping
     public ProductsDto getProducts() {
