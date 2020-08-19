@@ -7,40 +7,32 @@ import io.dicedev.pantry.domain.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-
 @RestController
 @RequestMapping("/products")
 @CrossOrigin
 @AllArgsConstructor
-public class PantryController {
+public class ProductController {
 
-    private final ProductService service;
+    private ProductService productService;
 
     @GetMapping
     public ProductsDto getProducts() {
-        return service.getProducts();
+        return productService.getProducts();
     }
-
-//    @GetMapping("/categories")
-//    public List<ProductCategoryEnum> getProductsCategories() {
-//        return Arrays.asList(ProductCategoryEnum.values());
-//    }
 
     @PostMapping
     public void addProduct(@RequestBody ProductDto product) {
-        service.addProduct(product);
+        productService.addProduct(product);
     }
 
     @PutMapping
     public void renameProduct(@RequestBody ProductDto productDto) {
-        service.renameProduct(productDto);
+        productService.renameProduct(productDto);
     }
 
     @DeleteMapping
     public void removeProduct(@RequestBody ProductDto productDto) {
 
-        service.removeProduct(productDto);
+        productService.removeProduct(productDto);
     }
 }

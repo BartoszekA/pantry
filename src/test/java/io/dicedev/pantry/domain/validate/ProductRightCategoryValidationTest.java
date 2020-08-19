@@ -104,4 +104,26 @@ public class ProductRightCategoryValidationTest {
         assertDoesNotThrow(() -> productRightCategoryValidator.isValid(productDto));
     }
 
+    @Test
+    public void shouldValidateProductIfNoProductWithSuchNameFound() {
+        //Given
+        UUID productId = UUID.randomUUID();
+        String productName = "Product";
+        UUID categoryId = UUID.randomUUID();
+        String categoryName = "Category";
+        CategoryDto categoryDto = new CategoryDto(categoryId, categoryName);
+        ProductDto productDto = ProductDto.builder()
+                .id(productId)
+                .name(productName)
+                .category(categoryDto)
+                .build();
+
+        Mockito.when(productRepository.findByName(productName)).thenReturn(Optional.empty());
+
+        //When
+        productRightCategoryValidator.isValid(productDto);
+
+        //Then
+        assertDoesNotThrow(() -> productRightCategoryValidator.isValid(productDto));
+    }
 }

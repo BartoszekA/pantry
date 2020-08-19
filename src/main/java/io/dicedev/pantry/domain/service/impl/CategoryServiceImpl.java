@@ -36,11 +36,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void addCategory(CategoryDto categoryDto) {
-        log.info("Adding category {}" + categoryDto);
+        log.info("Adding category {}", categoryDto);
         UUID categoryId = categoryDto.getId();
         CategoryEntity categoryEntity = categoryMapper.categoryDtoToCategoryEntity(categoryDto);
         categoryRepository.save(categoryEntity);
-        log.info("Category {} added" + categoryId);
+        log.info("Category {} added", categoryId);
     }
 
     @Override

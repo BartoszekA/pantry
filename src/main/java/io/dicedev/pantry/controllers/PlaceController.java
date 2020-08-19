@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class PlaceController {
 
-    private PlaceService placeService;
+    private final PlaceService placeService;
 
     @GetMapping
     public PlacesDto getPlaces() {
