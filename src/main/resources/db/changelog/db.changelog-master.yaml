@@ -15,3 +15,5 @@ databaseChangeLog:
       file: db/changelog/07-create-category-schema.xml
   - include:
       file: db/changelog/08-update-category-schema-insert-categories.xml
+  - include:
+      file: db/changelog/09-update-product-schema-add-expiration-field.xml

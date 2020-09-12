@@ -56,6 +56,7 @@ public class ProductServiceTestSuite {
                 .amount(productAmount)
                 .category(categoryDto)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
 
         //When
@@ -73,13 +74,14 @@ public class ProductServiceTestSuite {
         UUID entityId = UUID.randomUUID();
         CategoryDto categoryDto = new CategoryDto();
         CategoryEntity categoryEntity = new CategoryEntity();
-        ProductDto productDto = new ProductDto(entityId, entityName, entityAmount, categoryDto, true);
+        ProductDto productDto = new ProductDto(entityId, entityName, entityAmount, categoryDto, true, null);
         ProductEntity productEntity = ProductEntity.builder()
                 .id(entityId)
                 .name(entityName)
                 .amount(entityAmount)
                 .category(categoryEntity)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
         List<ProductEntity> allProducts = List.of(productEntity);
         Mockito.when(productRepository.findByDeleted()).thenReturn(allProducts);
@@ -111,6 +113,7 @@ public class ProductServiceTestSuite {
                 .amount(amount)
                 .category(categoryDto)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
         ProductEntity expectedEntity = ProductEntity.builder()
                 .id(id)
@@ -118,6 +121,7 @@ public class ProductServiceTestSuite {
                 .amount(amount)
                 .category(categoryEntity)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
 
         ProductEntity expectedProductEntity = ProductEntity.builder()
@@ -126,6 +130,7 @@ public class ProductServiceTestSuite {
                 .amount(2)
                 .category(categoryEntity)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
 
         Mockito.when(productRepository.findByName(expectedName)).thenReturn(Optional.ofNullable(expectedEntity));
@@ -162,6 +167,7 @@ public class ProductServiceTestSuite {
                 .amount(productAmount1)
                 .category(categoryDto1)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
 
         Integer productAmount2 = 1;
@@ -186,6 +192,7 @@ public class ProductServiceTestSuite {
                 .amount(productAmount3)
                 .category(categoryDto3)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
 
         //When
@@ -209,6 +216,7 @@ public class ProductServiceTestSuite {
                 .name(entityName)
                 .id(entityId)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
         ProductDto productDto = ProductDto.builder()
                 .id(entityId)
@@ -216,12 +224,14 @@ public class ProductServiceTestSuite {
                 .amount(entityAmount)
                 .category(categoryDto)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
         ProductEntity expectedProductEntity = ProductEntity.builder()
                 .amount(entityAmount + 1)
                 .name(entityName)
                 .id(entityId)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
 
         Mockito.when(productRepository.findByName(entityName)).thenReturn(Optional.ofNullable(productEntity));
@@ -247,6 +257,7 @@ public class ProductServiceTestSuite {
                 .amount(productAmount)
                 .category(categoryDto)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
 
         ProductEntity expectedEntity = ProductEntity.builder()
@@ -255,6 +266,7 @@ public class ProductServiceTestSuite {
                 .amount(productAmount)
                 .category(categoryEntity)
                 .deleted(false)
+                .expirationDate(null)
                 .build();
 
 

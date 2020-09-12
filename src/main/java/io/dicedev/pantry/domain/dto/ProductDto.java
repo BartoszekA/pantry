@@ -2,6 +2,8 @@ package io.dicedev.pantry.domain.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 @Getter
@@ -17,4 +19,5 @@ public class ProductDto {
     private Integer amount;
     private CategoryDto category;
     private Boolean deleted;
+    private LocalDate expirationDate;
 }

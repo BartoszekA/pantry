@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -28,4 +29,5 @@ public class ProductEntity {
             foreignKey = @ForeignKey(name = "FK_CATEGORY_TO_PRODUCT"))
     private CategoryEntity category;
     private Boolean deleted;
+    private LocalDate expirationDate;
 }

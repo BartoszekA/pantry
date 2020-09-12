@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
+
 
     @GetMapping
     public ProductsDto getProducts() {
