@@ -4,13 +4,16 @@ import io.dicedev.pantry.command.entity.ProductEntity;
 import io.dicedev.pantry.command.repository.ProductRepository;
 import io.dicedev.pantry.domain.dto.ProductDto;
 import io.dicedev.pantry.domain.dto.ProductsDto;
+import io.dicedev.pantry.domain.exception.PantryProductExpirationException;
 import io.dicedev.pantry.domain.service.ProductService;
 import io.dicedev.pantry.domain.validate.ProductValidator;
 import io.dicedev.pantry.mapper.ProductMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,5 +91,17 @@ public class ProductServiceImpl implements ProductService {
         Integer result = biFunction.apply(productEntity, productDto);
         productEntity.setAmount(result);
         return productEntity;
+    }
+
+    @Scheduled(cron = "0 0 7 * * *")
+    private void checkIfProductWillExpireSoon() throws PantryProductExpirationException {
+        ProductsDto productsDto = getProducts();
+        for (ProductDto productDto : productsDto.getProductsDto()) {
+            LocalDate expirationDate = productDto.getExpirationDate();
+            LocalDate elevenDaysBeforeExpirationDate = expirationDate.minusDays(11);
+            if (elevenDaysBeforeExpirationDate.isAfter(LocalDate.now())) {
+                throw new PantryProductExpirationException("This product expires soon");
+            }
+        }
     }
 }
